@@ -32,6 +32,7 @@
 
   <!-- Hero Section -->
   <div class="hero">
+    <div class="hero-back"></div>
     <div class="container">
       <h1>Welcome to Airline Portal</h1>
       <p>Book flights, manage your bookings, and explore new destinations.</p>

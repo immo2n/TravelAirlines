@@ -7,6 +7,29 @@
     text-align: center;
 }
 
+.login-body {
+    background-image: url('../img/background.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.login-box {
+    max-width: 550px;
+    position: absolute;
+    z-index: 1;
+    max-width: 550px;
+    background: #ffffffd4;
+    padding: 30px;
+    border-radius: 20px;
+}
+
+.hero {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .hero h1 {
     font-size: 3rem;
 }
@@ -16,6 +39,17 @@
     background: #ffffffc2;
     padding: 27px;
     border-radius: 30px;
+    width: 50%;
+    position: absolute;
+    z-index: 2;
+}
+
+.hero-back {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    background: #0000003d;
 }
 
 .form-holder {
