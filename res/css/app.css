@@ -1,0 +1,35 @@
+.hero {
+    background-image: url('../img/background.jpg');
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 80px 0;
+    text-align: center;
+}
+
+.hero h1 {
+    font-size: 3rem;
+}
+
+.hero .container {
+    color: #000000;
+    background: #ffffffc2;
+    padding: 27px;
+    border-radius: 30px;
+}
+
+.form-holder {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+}
+
+.form-holder .form-control {
+    width: 500px;
+}
+
+.navbar {
+    padding-left: 25px
+}
