@@ -17,6 +17,23 @@ if(!isset($_SESSION['admin'])) {
     exit();
 }
 
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "travel";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch flights from the database
+$sql = "SELECT * FROM flights ORDER BY date DESC";
+$result = $conn->query($sql);
+
 ?>
 
 <!DOCTYPE html>
@@ -43,42 +60,185 @@ if(!isset($_SESSION['admin'])) {
     </nav>
 
 
-
-
-    <!-- Main Content -->
-    <div class="container-fluid p-4">
-      <h2>Add flight schedule</h2>
-      <div class="row g-4 mt-4">
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body text-center">
-              <h5 class="card-title">Users</h5>
-              <p class="card-text">1,234</p>
-            </div>
-          </div>
+<!-- Main Content -->
+<div class="container-fluid p-4">
+      <h2>Add Flight Schedule</h2>
+      <form action="add_flight.php" method="POST">
+        <div class="mb-3">
+          <label for="id" class="form-label">Flight ID</label>
+          <input type="text" class="form-control" id="id" name="id" required>
         </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body text-center">
-              <h5 class="card-title">Sales</h5>
-              <p class="card-text">$12,345</p>
-            </div>
+        <div class="form-group col-md-3 mt-2">
+            <label for="from">From</label>
+            <select name="going_from" class="form-control mt-2 w-100" id="from">
+              <option>New York</option>
+              <option>Los Angeles</option>
+              <option>Chicago</option>
+              <option>Houston</option>
+              <option>Phoenix</option>
+              <option>Philadelphia</option>
+              <option>San Antonio</option>
+              <option>San Diego</option>
+              <option>Dallas</option>
+              <option>San Jose</option>
+              <option>Austin</option>
+              <option>Jacksonville</option>
+              <option>Fort Worth</option>
+              <option>Columbus</option>
+              <option>San Francisco</option>
+              <option>Charlotte</option>
+              <option>Indianapolis</option>
+              <option>Seattle</option>
+              <option>Denver</option>
+              <option>Washington</option>
+              <option>Boston</option>
+              <option>El Paso</option>
+              <option>Detroit</option>
+              <option>Nashville</option>
+              <option>Memphis</option>
+              <option>Portland</option>
+              <option>Oklahoma City</option>
+              <option>Las Vegas</option>
+              <option>Louisville</option>
+              <option>Baltimore</option>
+              <option>Milwaukee</option>
+              <option>Albuquerque</option>
+              <option>Tucson</option>
+              <option>Fresno</option>
+              <option>Mesa</option>
+              <option>Sacramento</option>
+              <option>Atlanta</option>
+              <option>Kansas City</option>
+              <option>Colorado Springs</option>
+              <option>Miami</option>
+              <option>Raleigh</option>
+              <option>Omaha</option>
+              <option>Long Beach</option>
+              <option>Virginia Beach</option>
+              <option>Oakland</option>
+              <option>Minneapolis</option>
+              <option>Arlington</option>
+              <option>Tampa</option>
+              <option>Tulsa</option>
+              <option>New Orleans</option>
+              <option>Wichita</option>
+              <option>Cleveland</option>
+              <option>Bakersfield</option>
+              <option>Aurora</option>
+              <option>Anaheim</option>
+              <option>Honolulu</option>
+            </select>
           </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card">
-            <div class="card-body text-center">
-              <h5 class="card-title">Feedback</h5>
-              <p class="card-text">345</p>
-            </div>
+          <div class="form-group col-md-3 mt-2">
+            <label for="from">From</label>
+            <select name="going_to" class="form-control mt-2 w-100" id="from">
+              <option>New York</option>
+              <option>Los Angeles</option>
+              <option>Chicago</option>
+              <option>Houston</option>
+              <option>Phoenix</option>
+              <option>Philadelphia</option>
+              <option>San Antonio</option>
+              <option>San Diego</option>
+              <option>Dallas</option>
+              <option>San Jose</option>
+              <option>Austin</option>
+              <option>Jacksonville</option>
+              <option>Fort Worth</option>
+              <option>Columbus</option>
+              <option>San Francisco</option>
+              <option>Charlotte</option>
+              <option>Indianapolis</option>
+              <option>Seattle</option>
+              <option>Denver</option>
+              <option>Washington</option>
+              <option>Boston</option>
+              <option>El Paso</option>
+              <option>Detroit</option>
+              <option>Nashville</option>
+              <option>Memphis</option>
+              <option>Portland</option>
+              <option>Oklahoma City</option>
+              <option>Las Vegas</option>
+              <option>Louisville</option>
+              <option>Baltimore</option>
+              <option>Milwaukee</option>
+              <option>Albuquerque</option>
+              <option>Tucson</option>
+              <option>Fresno</option>
+              <option>Mesa</option>
+              <option>Sacramento</option>
+              <option>Atlanta</option>
+              <option>Kansas City</option>
+              <option>Colorado Springs</option>
+              <option>Miami</option>
+              <option>Raleigh</option>
+              <option>Omaha</option>
+              <option>Long Beach</option>
+              <option>Virginia Beach</option>
+              <option>Oakland</option>
+              <option>Minneapolis</option>
+              <option>Arlington</option>
+              <option>Tampa</option>
+              <option>Tulsa</option>
+              <option>New Orleans</option>
+              <option>Wichita</option>
+              <option>Cleveland</option>
+              <option>Bakersfield</option>
+              <option>Aurora</option>
+              <option>Anaheim</option>
+              <option>Honolulu</option>
+            </select>
           </div>
+        <div class="mb-3">
+          <label for="price" class="form-label">Price</label>
+          <input type="number" class="form-control" id="price" name="price" required>
         </div>
-      </div>
+        <div class="mb-3">
+          <label for="date" class="form-label">Date</label>
+          <input type="date" class="form-control" id="date" name="date" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Flight</button>
+      </form>
     </div>
+
+    <div class="container mt-5">
+        <h2 class="mb-4">Flight Schedules</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Flight Number</th>
+                        <th>Going From</th>
+                        <th>Going To</th>
+                        <th>Price</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    if ($result->num_rows > 0) {
+                        // Output data of each row
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row['flight_number'] . "</td>";
+                            echo "<td>" . $row['going_from'] . "</td>";
+                            echo "<td>" . $row['going_to'] . "</td>";
+                            echo "<td>$" . $row['price'] . "</td>";
+                            echo "<td>" . $row['date'] . "</td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='5' class='text-center'>No flights found</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
   </div>
-
-
-
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

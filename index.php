@@ -1,3 +1,44 @@
+<?php 
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "travel";
+
+// Create connection
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Initialize variables
+$search_from = '';
+$search_to = '';
+$search_date = '';
+$title = 'Latest Schedules';
+
+$searched = 0;
+
+// Check if the form was submitted
+if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['from'], $_GET['to'], $_GET['departureDate'])) {
+    $search_from = $_GET['from'];
+    $search_to = $_GET['to'];
+    $search_date = $_GET['departureDate'];
+
+    // Update title
+    $title = "$search_from to $search_to on $search_date";
+    $searched = 1;
+    // Fetch flights based on search criteria
+    $sql = "SELECT * FROM flights WHERE going_from = '$search_from' AND going_to = '$search_to' AND date = '$search_date' ORDER BY date DESC";
+} else {
+    // Default query to show latest flights
+    $sql = "SELECT * FROM flights ORDER BY date DESC LIMIT 10";
+}
+
+$result = $conn->query($sql);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,7 +62,7 @@
           <a class="nav-link" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/login.php">Passenger Login</a>
+          <a class="nav-link" href="/ticket.php">View Your Ticket</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/employee/">Employee Login</a>
@@ -40,18 +81,18 @@
     </div>
   </div>
 
-  <!-- Flight Search Section -->
-  <section id="search" class="py-5">
-    <div class="container">
-      <h2 class="text-center mb-4">Find Your Flight</h2>
-      <div class="form-holder">
-        <form>
-        <div class="form-row">
-          <div class="form-group col-md-3 mt-2">
-            <label for="from">From</label>
-            <select class="form-control mt-2" id="from">
-              <option selected>Departure City</option>
-              <option>New York</option>
+  <div style="display: grid;grid-template-columns: 1fr 1fr;">
+    <!-- Flight Search Section -->
+    <section id="search" class="py-5 flex-grow-1">
+      <div class="container">
+        <h2 class="text-center mb-4">Find Your Flight</h2>
+        <form method="GET" action="">
+          <div class="form-row">
+            <div class="form-group col-md-3 mt-2">
+              <label for="from">From</label>
+              <select class="form-control mt-2" id="from" name="from" required>
+                <option selected>Departure City</option>
+                <option>New York</option>
               <option>Los Angeles</option>
               <option>Chicago</option>
               <option>Houston</option>
@@ -107,13 +148,14 @@
               <option>Aurora</option>
               <option>Anaheim</option>
               <option>Honolulu</option>
-            </select>
-          </div>
-          <div class="form-group col-md-3 mt-2">
-            <label for="to">To</label>
-            <select class="form-control mt-2" id="to">
-              <option selected>Arrival City</option>
-              <option>New York</option>
+                <!-- Add other cities here -->
+              </select>
+            </div>
+            <div class="form-group col-md-3 mt-2">
+              <label for="to">To</label>
+              <select class="form-control mt-2" id="to" name="to" required>
+                <option selected>Arrival City</option>
+                <option>New York</option>
               <option>Los Angeles</option>
               <option>Chicago</option>
               <option>Houston</option>
@@ -169,22 +211,56 @@
               <option>Aurora</option>
               <option>Anaheim</option>
               <option>Honolulu</option>
-            </select>
+                <!-- Add other cities here -->
+              </select>
+            </div>
+            <div class="form-group col-md-3 mt-2">
+              <label for="departureDate">Departure</label>
+              <input type="date" class="form-control mt-2" id="departureDate" name="departureDate" required>
+            </div>
           </div>
-          <div class="form-group col-md-3 mt-2">
-            <label for="departureDate">Departure</label>
-            <input forma type="date" class="form-control mt-2" id="departureDate">
-          </div>
-          <div class="form-group col-md-3 mt-2">
-            <label for="returnDate">Return</label>
-            <input type="date" class="form-control mt-2" id="returnDate">
-          </div>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block mt-3 w-100">Search Flights</button>
-      </form>
+          <button type="submit" class="btn btn-primary btn-block mt-3 w-100">Search Flights</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- Latest Flights Section -->
+    <div class="container mt-5 flex-grow-1">
+      <h2 class="mb-4"><?= htmlspecialchars($title) ?></h2>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+          <thead class="table-dark">
+            <tr>
+              <th>Flight Number</th>
+              <th>Going From</th>
+              <th>Going To</th>
+              <th>Price</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td>" . htmlspecialchars($row['flight_number']) . " ";
+                    if($searched == 1) echo '<a href="book.php?row=' . htmlspecialchars($row['id']) . '">Book Now</a>';
+                    echo "</td>";
+                    echo "<td>" . htmlspecialchars($row['going_from']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['going_to']) . "</td>";
+                    echo "<td>$" . htmlspecialchars($row['price']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['date']) . "</td>";
+                    echo "</tr>";
+                }
+            } else {
+                echo "<tr><td colspan='5' class='text-center'>No flights found</td></tr>";
+            }
+            ?>
+          </tbody>
+        </table>
       </div>
     </div>
-  </section>
+  </div>
 
   <!-- Footer -->
   <footer class="bg-primary text-white text-center py-3">
