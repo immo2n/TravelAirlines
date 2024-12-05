@@ -67,7 +67,7 @@ if ($result->num_rows > 0) {
     $flight_id = $booking['flight']; // Get the flight number from the booking
 
     // Now fetch flight details from the 'flights' table
-    $sql_flight = "SELECT flights.going_from, flights.going_to, flights.price, flights.date 
+    $sql_flight = "SELECT *
                    FROM flights 
                    WHERE flights.id = '$flight_id'";
     $flight_result = $conn->query($sql_flight);
@@ -132,7 +132,7 @@ function showTicketForm() {
       <div class="card-body">
         <p><strong>Passenger Name:</strong> <?= htmlspecialchars($booking['name']) ?></p>
         <p><strong>Transaction ID:</strong> <?= htmlspecialchars($booking['trx']) ?></p>
-        <p><strong>Flight Number:</strong> <?= htmlspecialchars($booking['flight']) ?></p>
+        <p><strong>Flight Number:</strong> <?= htmlspecialchars($flight['flight_number']) ?></p>
         <p><strong>From:</strong> <?= htmlspecialchars($flight['going_from']) ?></p>
         <p><strong>To:</strong> <?= htmlspecialchars($flight['going_to']) ?></p>
         <p><strong>Price:</strong> $<?= htmlspecialchars($flight['price']) ?></p>
